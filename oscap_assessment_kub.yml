@@ -1,0 +1,20 @@
+---
+- hosts: KubCluster
+  become: True
+  tasks:
+  - name: Install openscap
+    apt:
+      name: libopenscap8
+      state: present
+  - name: Transfer scap datastream
+    copy: src=/home/giuseppe/Downloads/scap-security-guide-0.1.53/ssg-ubuntu1804-ds-1.2.xml dest=/tmp/ssg-ubuntu1804-ds-1.2.xml mode=0777
+ 
+  - name: Execute static assessment
+    command: oscap xccdf eval --profile anssi_np_nt28_minimal --report /tmp/report.html /tmp/ssg-ubuntu1804-ds-1.2.xml
+    register: result
+    failed_when:
+      - result.rc == 1
+  
+  - fetch:
+      src: /tmp/report.html
+      dest: ./
