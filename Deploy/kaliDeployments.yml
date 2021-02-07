@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kali-linux
+  labels:
+    name: kali-linux
+  namespace: sock-shop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: kali-linux
+  template:
+    metadata:
+      labels:
+        name: kali-linux
+    spec:
+      containers:
+       - name: kali-linux
+         image: kalilinux/kali-rolling
+         command: ["/bin/sh","-ec","sleep 1d"]
