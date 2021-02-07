@@ -1,0 +1,16 @@
+---
+- name: Create pods using deployment 
+  hosts: KubMaster 
+  become: true
+ 
+  tasks: 
+  - name: copy config file
+    copy:
+      src: deployments.yaml
+      dest: /tmp/deployments.yaml
+
+  - name: create a deployment
+    command: kubectl apply -f /tmp/deployments.yaml
+ 
+  - name: update deployment with new pods if image updated in docker hub
+    command: kubectl rollout restart /tmp/deployments.yaml
