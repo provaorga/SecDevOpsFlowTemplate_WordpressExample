@@ -1,0 +1,9 @@
+---
+- name: Add worker nodes
+  hosts: KubMaster
+  become: true
+ 
+  tasks: 
+  - name: Add node
+    include: inner.yml
+    loop: "{{groups['KubCluster']}}"
