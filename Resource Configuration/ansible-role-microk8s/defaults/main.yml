@@ -1,4 +1,0 @@
-microk8s_version: "1.20/stable"
-
-# Enable to install Kubernetes dashboard
-k8s_dashboard: False
