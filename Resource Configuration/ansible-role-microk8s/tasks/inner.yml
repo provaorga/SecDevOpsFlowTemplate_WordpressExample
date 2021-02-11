@@ -1,0 +1,8 @@
+---
+- name: Generate Token  
+  command: /snap/bin/microk8s add-node
+  register: out
+
+- name: Join node
+  command: "{{out.stdout_lines[1]}}"
+  delegate_to: "{{ item }}"

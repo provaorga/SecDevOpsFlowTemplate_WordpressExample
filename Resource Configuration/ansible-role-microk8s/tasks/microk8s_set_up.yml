@@ -1,0 +1,66 @@
+- name: Update apt cache
+  raw: apt-get -y update
+
+- name: Install base dependencies
+  apt: 
+    name: 
+      - snapd
+    state: present 
+
+- name: Disable Swap
+  command: swapoff -a
+- name: Install microk8s
+  snap:
+    name: microk8s
+    classic: yes
+    channel: "{{microk8s_version}}"
+
+- name: Microk8s status
+  shell: source /etc/profile.d/apps-bin-path.sh && microk8s.status --wait-ready
+  args:
+    executable: /bin/bash
+
+- name: Microk8s inspect
+  shell: source /etc/profile.d/apps-bin-path.sh && microk8s.inspect
+  args:
+    executable: /bin/bash
+
+- name: Alias kubectl
+  shell: "source /etc/profile.d/apps-bin-path.sh && snap alias microk8s.kubectl kubectl"
+  args:
+    executable: /bin/bash
+
+- name: Enable dns
+  shell: "source /etc/profile.d/apps-bin-path.sh && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && microk8s.enable dns"
+  args:
+    executable: /bin/bash
+  run_once: true
+  delegate_to: "{{groups[ MASTER ][0]}}"
+
+- name: Enable ingress
+  shell: "source /etc/profile.d/apps-bin-path.sh  && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && microk8s.enable ingress"
+  args:
+    executable: /bin/bash
+  run_once: true
+  delegate_to: "{{groups[ MASTER ][0]}}"
+
+- name: Enable storage
+  shell: "source /etc/profile.d/apps-bin-path.sh && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && microk8s.enable storage"
+  args:
+    executable: /bin/bash
+  run_once: true
+  delegate_to:  "{{groups[ MASTER ][0]}}"
+
+- name: Enable K8s Dashboard
+  shell: "source /etc/profile.d/apps-bin-path.sh && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && /snap/bin/microk8s.enable dashboard"
+  when: k8s_dashboard|default(False)|bool == True
+  args:
+    executable: /bin/bash
+  run_once: true
+  delegate_to:  "{{groups[ MASTER ][0]}}"
+
+- name: Add node
+  include: inner.yml
+  loop:  "{{groups[ WORKERS ] }}"
+  when: inventory_hostname in groups[ MASTER ]
+  
