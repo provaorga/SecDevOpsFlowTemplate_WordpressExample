@@ -1,0 +1,19 @@
+[KubWorker]
+{IP_WORKER}
+
+[KubMaster]
+{IP_MASTER}
+
+[KubCluster:children]
+KubMaster
+KubWorker
+
+[KubWorker:vars]
+ansible_sudo_pass="{{ lookup('env','WORKER_SUDO_PASS')}}"
+ansible_user="{{ lookup('env','WORKER_USER')}}"
+ansible_ssh_pass="{{ lookup('env','WORKER_PASS')}}"
+
+[KubMaster:vars]
+ansible_sudo_pass="{{ lookup('env','MASTER_SUDO_PASS')}}"
+ansible_user="{{ lookup('env','MASTER_USER')}}"
+ansible_ssh_pass="{{ lookup('env','MASTER_PASS')}}"
