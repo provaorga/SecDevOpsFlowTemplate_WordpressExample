@@ -18,4 +18,11 @@ spec:
       containers:
        - name: kali-linux
          image: kalilinux/kali-rolling
-         command: ["/bin/sh","-ec","sleep 1d"]
+         command: ["/bin/sh","-ec","sleep 10d"]
+         volumeMounts:
+         - mountPath: /tmp
+           name: kali-volume
+      volumes:
+        - name: kali-volume
+          emptyDir:
+            medium: Memory
