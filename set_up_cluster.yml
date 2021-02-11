@@ -1,0 +1,6 @@
+---
+- name: Set-up Kubernetes Cluster
+  hosts: "{{ CLUSTER }}"
+  become: true
+  roles:
+    - ansible-role-microk8s
