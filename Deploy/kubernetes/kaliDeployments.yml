@@ -26,3 +26,18 @@ spec:
         - name: kali-volume
           emptyDir:
             medium: Memory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kali-linux
+  labels:
+    name: kali-linux
+spec:
+  type: NodePort
+  ports:
+  - port: 9392
+    targetPort: 9392
+    nodePort: 30002
+  selector:
+    name: kali-linux
