@@ -1,5 +1,5 @@
 ---
-- hosts: VM
+- hosts: KubCluster
   become: True
   tasks:
   - name: Install Chef-inspec
