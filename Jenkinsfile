@@ -30,10 +30,6 @@ pipeline {
     stage('Deploy'){
       steps{
         script{
-          load "version.txt"
-          if(params.FRONT_END){
-            env.FRONT_END=params.FRONT_END
-          }
          kubernetesDeploy configs: 'Deploy/namespaces.yaml, Deploy/deployments.yaml,Deployment/kaliDeployments.yml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
         }
       }    
