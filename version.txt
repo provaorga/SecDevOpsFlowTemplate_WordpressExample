@@ -1,14 +1,3 @@
-env.FRONT_END="test:latest"
-env.EDGE_ROUTER="edge-router:0.1.1"
-env.CATALOGUE_DB="catalogue-db:0.3.0"
-env.CATALOGUE="catalogue:0.3.5"
-env.CARTS="carts:0.4.8"
-env.CARTS_DB="mongo:3.4"
-env.ORDERS="orders:0.4.7"
-env.ORDERS_DB="mongo:3.4"
-env.SHIPPING="shipping:0.4.8"
-env.QUEUE_MASTER="queue-master:0.3.1"
-env.RABBIT_MQ="rabbitmq:3.6.8"
-env.PAYMENT="payment:0.4.3"
-env.USER="user:0.4.4"
-env.USER_DB="user-db:0.4.0" 
+#Add here stable container image version of you appplication
+#Example env.SERVICE= "IMAGE_NAME:TAG"
+
