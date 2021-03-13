@@ -1,0 +1,59 @@
+pipeline {
+  environment {
+    registry = "${DOCKER_REGISTRY}"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+    DOCKER_TAG = getVersion().trim()
+    IMAGE="${JOB_NAME}"
+  }
+  # if is a nodejs app
+  tools {
+    nodejs 'NodeJS'
+ }
+  agent any
+  stages {
+    stage('SonarQube analysis'){
+      steps{
+        withSonarQubeEnv(installationName: 'Sonarqube2', credentialsId: 'Sonarqube2') {
+          sh "${tool("sonar_scanner")}/bin/sonar-scanner"
+        }
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build("$registry:$DOCKER_TAG")
+        }
+      }
+    }
+    stage('Static Security Assesment'){
+      steps{
+        sh 'docker run --name ${IMAGE} -t -d $registry:${DOCKER_TAG}'
+        #Insert your chef inspec profile
+        sh 'inspec exec ${HERE} -t docker://${IMAGE} --chef-license=accept || true'
+        sh 'docker stop ${IMAGE}'
+        sh 'docker container rm ${IMAGE}'
+     }
+    }
+    stage('Push Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+ }
+  post{
+    success{
+      echo 'Post success'
+      build job: '${APP_NAME}', parameters: [string (value: "$IMAGE"+":"+"$DOCKER_TAG", description: 'Parametro', name: 'FRONT_END')]
+    }
+  }
+}
+
+def getVersion(){
+  def commitHash = sh returnStdout: true, script: 'git rev-parse --short HEAD'
+  return commitHash
+}
