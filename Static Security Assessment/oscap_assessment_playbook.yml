@@ -7,10 +7,10 @@
       name: libopenscap8
       state: present
   - name: Transfer scap datastream
-    copy: src=ssg-ubuntu1804-ds-1.2.xml dest=/tmp/ssg-ubuntu1804-ds-1.2.xml mode=0777
+    copy: src=${XCCDF}l dest=/tmp/${XCCDF} mode=0777
  
   - name: Execute static assessment
-    command: oscap xccdf eval --profile anssi_np_nt28_minimal --report /tmp/report.html /tmp/ssg-ubuntu1804-ds-1.2.xml
+    command: oscap xccdf eval --profile ${XCCDF_PROFILE} --report /tmp/report.html /tmp/${XCCDF}
     register: result
     failed_when:
       - result.rc == 1
