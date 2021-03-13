@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 
+  labels:
+    name: 
+  namespace: 
+spec:
+  replicas: 
+  selector:
+    matchLabels:
+      name: 
+  template:
+    metadata:
+      labels:
+        name: 
+    spec:
+      containers:
+      - name: 
+        image: 
+        ports:
+         - containerPort: 80
+        env:
+         - name: 
+           value: 
+        securityContext:
+          capabilities:
+            drop:
+            add:
+        volumeMounts:
+        - mountPath:
+          name: 
+      volumes:
+        - name:
+          emptyDir:
+            medium: Memory
+        - name: 
+          persistentVolumeClaim:
+            claimName: 
