@@ -3,6 +3,14 @@ variable "ip_list"{
   type  =  list
   default  =  ["{IP1}","{IP2}"]
 }
+variable "credentials_ciuser"{
+  type  =  list
+  default  =  ["{USER1}","{USER2}"]
+}
+variable "credentials_cipassword"{
+  type  =  list
+  default  =  ["{PASSWORD1}","{PASSWORD2}"]
+}
 
 resource "proxmox_vm_qemu" "proxmox_vm1" {
   count             = {VM_COUNT}
@@ -10,14 +18,16 @@ resource "proxmox_vm_qemu" "proxmox_vm1" {
   target_node       = "pve"
   clone             = "{VM_TEMPLATE_NAME}"
   desc              = <<-EOT
-            user: deploy
-            password: deploy
-            root pass: deploy
+            user: ${var.credentials_ciuser[count.index]}
+            password: ${var.credentials_cipassword[count.index]}
+            root pass: ${var.credentials_cipassword[count.index]}
         EOT
+  ciuser=  ${var.credentials_ciuser[count.index]}
+  cipassword=  ${var.credentials_cipassword[count.index]}
   memory = {MEMORY_IN_MB}
   cores = "{CORE}"
   cpu = "kvm64"
-  pool = "Tesi_Zagaria"
+  pool = "{POOL}"
   define_connection_info = false
   hastate    =    "started"
   
