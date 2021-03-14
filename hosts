@@ -1,8 +1,8 @@
 [KubWorker]
-{IP_WORKER}
+192.168.6.97
 
 [KubMaster]
-{IP_MASTER}
+192.168.6.76
 
 [KubCluster:children]
 KubMaster
