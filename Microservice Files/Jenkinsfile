@@ -6,7 +6,7 @@ pipeline {
     DOCKER_TAG = getVersion().trim()
     IMAGE="${JOB_NAME}"
   }
-  # if is a nodejs app
+  // if is a nodejs app
   tools {
     nodejs 'NodeJS'
  }
@@ -30,7 +30,7 @@ pipeline {
       steps{
         sh 'docker run --name ${IMAGE} -t -d $registry:${DOCKER_TAG}'
         #Insert your chef inspec profile
-        sh 'inspec exec ${HERE} -t docker://${IMAGE} --reporter html:inspec_report.html --chef-license=accept || true'
+        sh 'inspec exec ${HERE} -t docker://${IMAGE} --reporter html:/Results/inspec_report.html --chef-license=accept || true'
         sh 'docker stop ${IMAGE}'
         sh 'docker container rm ${IMAGE}'
         
