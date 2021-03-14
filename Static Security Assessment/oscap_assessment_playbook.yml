@@ -17,4 +17,4 @@
   
   - fetch:
       src: /tmp/report.html
-      dest: ./
+      dest: ../Results/
