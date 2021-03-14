@@ -1,7 +1,7 @@
 
 variable "ip_list"{
   type  =  list
-  default  =  ["192.168.6.76","192.168.6.97"]
+  default  =  ["192.168.6.114","192.168.6.115"]
 }
 variable "credentials_ciuser"{
   type  =  list
