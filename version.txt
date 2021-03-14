@@ -1,3 +1,2 @@
-#Add here stable container image version of you appplication
-#Example env.SERVICE= "IMAGE_NAME:TAG"
-
+env.WP="wordpress:latest"
+env.MYSQL="mysql:latest"
