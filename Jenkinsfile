@@ -36,7 +36,9 @@ pipeline {
     stage('Deploy'){
       steps{
         script{
-         kubernetesDeploy configs: 'Deploy/namespaces.yaml, Deploy/deployments.yaml,Deployment/kaliDeployments.yml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+         load "version.txt"
+         kubernetesDeploy configs: 'Deploy/Kubernetes/namespaces.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+         kubernetesDeploy configs: 'Deploy/Kubernetes/deployments.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
         }
       }    
     }
