@@ -7,7 +7,7 @@
       name: libopenscap8
       state: present
   - name: Transfer scap datastream
-    copy: src=${XCCDF}l dest=/tmp/${XCCDF} mode=0777
+    copy: src=${XCCDF} dest=/tmp/${XCCDF} mode=0777
  
   - name: Execute static assessment
     command: oscap xccdf eval --profile ${XCCDF_PROFILE} --report /tmp/report.html /tmp/${XCCDF}
