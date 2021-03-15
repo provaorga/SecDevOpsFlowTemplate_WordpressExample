@@ -83,6 +83,13 @@ spec:
               value: wordpress-mysql
             - name: WORDPRESS_DB_PASSWORD
               value: fake
+            - name: WORDPRESS_DB_USER
+              value: wordpress
+            - name: WORDPRESS_DB_PASSWORD
+              value: wordpress
+            - name: WORDPRESS_DB_NAME
+              value: wordpress
+
           ports:
             - containerPort: 80
               name: wordpress
@@ -147,6 +154,12 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: fake
+            - name: MYSQL_USER
+              value: wordpress
+            - name: MYSQL_DATABASE
+              value: wordpress
+            - name: MYSQL_PASSWORD
+              value: wordpress
           ports:
             - containerPort: 3306
               name: mysql
