@@ -7,8 +7,8 @@ pipeline {
     stage('Provisioning VM on Proxmox with Terraform'){
       steps{
         withCredentials([usernamePassword(credentialsId: 'Proxmox', passwordVariable: 'PASSWORD', usernameVariable: 'USER')]) {
-          sh label: '', script: 'cd Provisioning; terraform init'
-          sh label: '', script: 'cd Provisioning; export PM_USER=${USER}; export PM_PASS=${PASSWORD}; terraform apply --auto-approve'
+          //sh label: '', script: 'cd Provisioning; terraform init'
+          //sh label: '', script: 'cd Provisioning; export PM_USER=${USER}; export PM_PASS=${PASSWORD}; terraform apply --auto-approve'
         }
       }
     }
