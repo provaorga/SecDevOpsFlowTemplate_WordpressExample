@@ -38,7 +38,7 @@ pipeline {
       steps{
         script{
          load "version.txt"
-         if(params.FRONT_END){
+         if(params.WP){
            env.WP=params.WP
          }
          kubernetesDeploy configs: 'Deploy/kubernetes/volumes.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
