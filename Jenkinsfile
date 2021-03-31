@@ -40,7 +40,6 @@ pipeline {
         }
       }    
     }
-  }
   stage('DAST'){
     steps{
       withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
