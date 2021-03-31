@@ -24,13 +24,6 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: '')]){
           ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/oscap_assessment_playbook.yml'
           ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/inspec_assessment_playbook.yml'
-          
-          withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
-            sh 'git add Results/*'
-            sh 'git commit -m "Add report File"'
-            sh 'git push origin HEAD:main'
-          }
         }
       }
     }
@@ -48,4 +41,27 @@ pipeline {
       }    
     }
   }
+  stage('DAST'){
+    steps{
+      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
+        script{
+          kubernetesDeploy configs: 'zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+          def remote = [:]
+          remote.name = "${MASTER_USER}"
+          remote.host = '192.168.6.76'
+          remote.user = "${MASTER_USER}"
+          remote.password = "${MASTER_USER}"
+          remote.allowAnyHosts = true
+          sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/${JOB_NAME}.html", override: true
+          withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
+            sh 'git add Results/*'
+            sh 'git commit -m "Add report File"'
+            sh 'git push origin HEAD:main'
+          }
+        }
+      }
+    }
+  }
+}
 }
