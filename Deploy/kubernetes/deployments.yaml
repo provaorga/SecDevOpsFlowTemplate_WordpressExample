@@ -93,7 +93,7 @@ spec:
         tier: mysql
     spec:
       containers:
-        - image: $MYSQL
+        - image: $WP_DB
           name: mysql
           env:
             - name: MYSQL_ROOT_PASSWORD
