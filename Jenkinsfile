@@ -47,6 +47,7 @@ pipeline {
     steps{
       withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
         script{
+          sh 'echo ciao'
           /*
           kubernetesDeploy configs: 'Deploy/kubernetes/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sh 'sleep 60'
