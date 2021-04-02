@@ -59,8 +59,8 @@ pipeline {
             sh 'git add Results/*'
             sh 'git commit -m "Add report File"'
             sh 'git push origin HEAD:main'
-            */
-          }
+            
+          }*/
         }
       }
     }
