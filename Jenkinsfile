@@ -62,7 +62,7 @@ pipeline {
           kali.allowAnyHosts = true
           
           sh 'echo "DAST in ZAP Container"'
-          kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], deleteResource:true, kubeconfigId: 'provafile', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+          kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], deleteResource: 'true', kubeconfigId: 'provafile', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sh 'echo "DAST in Kali-Linux"'
           sshPut remote: kali, from: 'DAST/kali_zap.sh', into: '.'
          // sshCommand remote: kali, command: "chmod +x kali_zap.sh && ./kali_zap.sh http://192.168.6.76:30001 /tmp/kali_zap_Report.html"
