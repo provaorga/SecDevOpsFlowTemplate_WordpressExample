@@ -47,7 +47,7 @@ pipeline {
     steps{
       withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
         script{
-          sh 'DAST in ZAP Container'
+          sh 'echo "DAST in ZAP Container"'
          
           kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sh 'sleep 60'
@@ -67,7 +67,7 @@ pipeline {
           sshCommand remote: kali, command: "./kali_zap.sh http://192.168.6.76:30001 ./kali_zap_Report.html"
           sshGet remote: kali, from: "kali_zap_Report.html", into: "${WORKSPACE}/Results/${JOB_NAME}_kali_zap_report.html", override: true
           sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/Results/${JOB_NAME}.html", override: true
-          sh 'DAST in Kali-Linux'
+          sh 'echo "DAST in Kali-Linux"'
           withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
             sh 'git add Results/*'
