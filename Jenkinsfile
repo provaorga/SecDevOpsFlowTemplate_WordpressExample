@@ -22,8 +22,8 @@ pipeline {
     stage('Static Assessment Provisioned Environment'){
       steps{
         withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: '')]){
-          ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/oscap_assessment_playbook.yml'
-          ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/inspec_assessment_playbook.yml'
+          //ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/oscap_assessment_playbook.yml'
+          //ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/inspec_assessment_playbook.yml'
         }
       }
     }
@@ -47,9 +47,9 @@ pipeline {
     steps{
       withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
         script{
-          sh 'echo ciao'
-          /*
-          kubernetesDeploy configs: 'Deploy/kubernetes/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+          sh 'DAST in ZAP Container'
+         
+          kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sh 'sleep 60'
           def remote = [:]
           remote.name = "${MASTER_USER}"
@@ -57,14 +57,24 @@ pipeline {
           remote.user = "${MASTER_USER}"
           remote.password = "${MASTER_USER}"
           remote.allowAnyHosts = true
+          def kali = [:]
+          kali.name = "kali"
+          kali.host = '192.168.6.118'
+          kali.user = "kali"
+          kali.password = "kali"
+          kali.allowAnyHosts = true
+          sshPut remote: kali, from: 'DAST/kali_zap.sh', into: '.'
+          sshCommand remote: kali, command: "./kali_zap.sh http://192.168.6.76:30001 ./kali_zap_Report.html"
+          sshGet remote: kali, from: "kali_zap_Report.html", into: "${WORKSPACE}/Results/${JOB_NAME}_kali_zap_report.html", override: true
           sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/Results/${JOB_NAME}.html", override: true
+          sh 'DAST in Kali-Linux'
           withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
             sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
             sh 'git add Results/*'
             sh 'git commit -m "Add report File"'
             sh 'git push origin HEAD:main'
             
-          }*/
+          }
         }
       }
     }
