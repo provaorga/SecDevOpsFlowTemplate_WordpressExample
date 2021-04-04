@@ -50,7 +50,7 @@ pipeline {
           sh 'echo "DAST in ZAP Container"'
          
           //kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
-          sh 'sleep 10'
+          sh 'sleep 0'
           def remote = [:]
           remote.name = "${MASTER_USER}"
           remote.host = '192.168.6.76'
@@ -64,7 +64,7 @@ pipeline {
           kali.password = "kali"
           kali.allowAnyHosts = true
           sshPut remote: kali, from: 'DAST/kali_zap.sh', into: '.'
-          sshCommand remote: kali, command: "chmod +x kali_Zap.sh && ./kali_zap.sh http://192.168.6.76:30001 ./kali_zap_Report.html"
+          sshCommand remote: kali, command: "chmod +x kali_zap.sh && ./kali_zap.sh http://192.168.6.76:30001 ./kali_zap_Report.html"
           sshGet remote: kali, from: "kali_zap_Report.html", into: "${WORKSPACE}/Results/${JOB_NAME}_kali_zap_report.html", override: true
           sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/Results/${JOB_NAME}.html", override: true
           sh 'echo "DAST in Kali-Linux"'
