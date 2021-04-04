@@ -49,8 +49,8 @@ pipeline {
         script{
           sh 'echo "DAST in ZAP Container"'
          
-          kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
-          sh 'sleep 60'
+          //kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'kubconf', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
+          sh 'sleep 10'
           def remote = [:]
           remote.name = "${MASTER_USER}"
           remote.host = '192.168.6.76'
