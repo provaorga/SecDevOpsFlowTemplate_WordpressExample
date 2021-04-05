@@ -1,0 +1,2410 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>RSpec results</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Expires" content="-1" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <style type="text/css">
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-size: 80%;
+  }
+  </style>
+  <script type="text/javascript">
+    // <![CDATA[
+
+function addClass(element_id, classname) {
+  document.getElementById(element_id).className += (" " + classname);
+}
+
+function removeClass(element_id, classname) {
+  var elem = document.getElementById(element_id);
+  var classlist = elem.className.replace(classname,'');
+  elem.className = classlist;
+}
+
+function moveProgressBar(percentDone) {
+  document.getElementById("rspec-header").style.width = percentDone +"%";
+}
+
+function makeRed(element_id) {
+  removeClass(element_id, 'passed');
+  removeClass(element_id, 'not_implemented');
+  addClass(element_id,'failed');
+}
+
+function makeYellow(element_id) {
+  var elem = document.getElementById(element_id);
+  if (elem.className.indexOf("failed") == -1) {  // class doesn't includes failed
+    if (elem.className.indexOf("not_implemented") == -1) { // class doesn't include not_implemented
+      removeClass(element_id, 'passed');
+      addClass(element_id,'not_implemented');
+    }
+  }
+}
+
+function apply_filters() {
+  var passed_filter = document.getElementById('passed_checkbox').checked;
+  var failed_filter = document.getElementById('failed_checkbox').checked;
+  var pending_filter = document.getElementById('pending_checkbox').checked;
+
+  assign_display_style("example passed", passed_filter);
+  assign_display_style("example failed", failed_filter);
+  assign_display_style("example not_implemented", pending_filter);
+
+  assign_display_style_for_group("example_group passed", passed_filter);
+  assign_display_style_for_group("example_group not_implemented", pending_filter, pending_filter || passed_filter);
+  assign_display_style_for_group("example_group failed", failed_filter, failed_filter || pending_filter || passed_filter);
+}
+
+function get_display_style(display_flag) {
+  var style_mode = 'none';
+  if (display_flag == true) {
+    style_mode = 'block';
+  }
+  return style_mode;
+}
+
+function assign_display_style(classname, display_flag) {
+  var style_mode = get_display_style(display_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    elems[i].style.display = style_mode;
+  }
+}
+
+function assign_display_style_for_group(classname, display_flag, subgroup_flag) {
+  var display_style_mode = get_display_style(display_flag);
+  var subgroup_style_mode = get_display_style(subgroup_flag);
+  var elems = document.getElementsByClassName(classname)
+  for (var i=0; i<elems.length;i++) {
+    var style_mode = display_style_mode;
+    if ((display_flag != subgroup_flag) && (elems[i].getElementsByTagName('dt')[0].innerHTML.indexOf(", ") != -1)) {
+      elems[i].style.display = subgroup_style_mode;
+    } else {
+      elems[i].style.display = display_style_mode;
+    }
+  }
+}
+
+    // ]]>
+  </script>
+  <style type="text/css">
+#rspec-header {
+  background: #65C400; color: #fff; height: 4em;
+}
+
+.rspec-report h1 {
+  margin: 0px 10px 0px 10px;
+  padding: 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  font-size: 1.8em;
+  position: absolute;
+}
+
+#label {
+  float:left;
+}
+
+#display-filters {
+  float:left;
+  padding: 28px 0 0 40%;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+}
+
+#summary {
+  float:right;
+  padding: 5px 10px;
+  font-family: "Lucida Grande", Helvetica, sans-serif;
+  text-align: right;
+}
+
+#summary p {
+  margin: 0 0 0 2px;
+}
+
+#summary #totals {
+  font-size: 1.2em;
+}
+
+.example_group {
+  margin: 0 10px 5px;
+  background: #fff;
+}
+
+dl {
+  margin: 0; padding: 0 0 5px;
+  font: normal 11px "Lucida Grande", Helvetica, sans-serif;
+}
+
+dt {
+  padding: 3px;
+  background: #65C400;
+  color: #fff;
+  font-weight: bold;
+}
+
+dd {
+  margin: 5px 0 5px 5px;
+  padding: 3px 3px 3px 18px;
+}
+
+dd .duration {
+  padding-left: 5px;
+  text-align: right;
+  right: 0px;
+  float:right;
+}
+
+dd.example.passed {
+  border-left: 5px solid #65C400;
+  border-bottom: 1px solid #65C400;
+  background: #DBFFB4; color: #3D7700;
+}
+
+dd.example.not_implemented {
+  border-left: 5px solid #FAF834;
+  border-bottom: 1px solid #FAF834;
+  background: #FCFB98; color: #131313;
+}
+
+dd.example.pending_fixed {
+  border-left: 5px solid #0000C2;
+  border-bottom: 1px solid #0000C2;
+  color: #0000C2; background: #D3FBFF;
+}
+
+dd.example.failed {
+  border-left: 5px solid #C20000;
+  border-bottom: 1px solid #C20000;
+  color: #C20000; background: #FFFBD3;
+}
+
+
+dt.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+dt.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+dt.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+#rspec-header.not_implemented {
+  color: #000000; background: #FAF834;
+}
+
+#rspec-header.pending_fixed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+#rspec-header.failed {
+  color: #FFFFFF; background: #C40D0D;
+}
+
+
+.backtrace {
+  color: #000;
+  font-size: 12px;
+}
+
+a {
+  color: #BE5C00;
+}
+
+/* Ruby code, style similar to vibrant ink */
+.ruby {
+  font-size: 12px;
+  font-family: monospace;
+  color: white;
+  background-color: black;
+  padding: 0.1em 0 0.2em 0;
+}
+
+.ruby .keyword { color: #FF6600; }
+.ruby .constant { color: #339999; }
+.ruby .attribute { color: white; }
+.ruby .global { color: white; }
+.ruby .module { color: white; }
+.ruby .class { color: white; }
+.ruby .string { color: #66FF00; }
+.ruby .ident { color: white; }
+.ruby .method { color: #FFCC00; }
+.ruby .number { color: white; }
+.ruby .char { color: white; }
+.ruby .comment { color: #9933CC; }
+.ruby .symbol { color: white; }
+.ruby .regex { color: #44B4CC; }
+.ruby .punct { color: white; }
+.ruby .escape { color: white; }
+.ruby .interp { color: white; }
+.ruby .expr { color: white; }
+
+.ruby .offending { background-color: gray; }
+.ruby .linenum {
+  width: 75px;
+  padding: 0.1em 1em 0.2em 0;
+  color: #000000;
+  background-color: #FFFBD3;
+}
+
+  </style>
+</head>
+<body>
+<div class="rspec-report">
+
+<div id="rspec-header">
+  <div id="label">
+    <h1>RSpec Code Examples</h1>
+  </div>
+
+  <div id="display-filters">
+    <input id="passed_checkbox"  name="passed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="1" /> <label for="passed_checkbox">Passed</label>
+    <input id="failed_checkbox"  name="failed_checkbox"  type="checkbox" checked="checked" onchange="apply_filters()" value="2" /> <label for="failed_checkbox">Failed</label>
+    <input id="pending_checkbox" name="pending_checkbox" type="checkbox" checked="checked" onchange="apply_filters()" value="3" /> <label for="pending_checkbox">Pending</label>
+  </div>
+
+  <div id="summary">
+    <p id="totals">&#160;</p>
+    <p id="duration">&#160;</p>
+  </div>
+</div>
+
+
+<div class="results">
+<div id="div_group_1" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_1" class="passed">File /etc/ssh/ssh_config</dt>
+    <script type="text/javascript">moveProgressBar('0.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to exist</span><span class='duration'>0.00114s</span></dd>
+    <script type="text/javascript">moveProgressBar('1.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be file</span><span class='duration'>0.01023s</span></dd>
+    <script type="text/javascript">moveProgressBar('2.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be owned by &quot;root&quot;</span><span class='duration'>0.01366s</span></dd>
+    <script type="text/javascript">moveProgressBar('3.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be grouped into &quot;root&quot;</span><span class='duration'>0.00929s</span></dd>
+    <script type="text/javascript">moveProgressBar('4.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be executable</span><span class='duration'>0.00022s</span></dd>
+    <script type="text/javascript">moveProgressBar('5.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by owner</span><span class='duration'>0.00010s</span></dd>
+    <script type="text/javascript">moveProgressBar('6.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by group</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('7.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by other</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('8.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be writable by owner</span><span class='duration'>0.00010s</span></dd>
+    <script type="text/javascript">moveProgressBar('9.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by group</span><span class='duration'>0.00009s</span></dd>
+    <script type="text/javascript">moveProgressBar('10.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by other</span><span class='duration'>0.00009s</span></dd>
+  </dl>
+</div>
+<div id="div_group_2" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_2" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_3" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_3" class="passed">AddressFamily</dt>
+    <script type="text/javascript">makeRed('rspec-header');</script>
+    <script type="text/javascript">makeRed('div_group_3');</script>
+    <script type="text/javascript">makeRed('example_group_3');</script>
+    <script type="text/javascript">moveProgressBar('11.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /inet|inet6|any/</span>
+      <span class="duration">0.00922s</span>
+      <div class="failure" id="failure_1">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected nil to match /inet|inet6|any/
+  # ssh-baseline-master/controls/ssh_spec.rb:55:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:55:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">53</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_4" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_4" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_5" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_5" class="passed">Port</dt>
+    <script type="text/javascript">makeRed('div_group_5');</script>
+    <script type="text/javascript">makeRed('example_group_5');</script>
+    <script type="text/javascript">moveProgressBar('11.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;22&quot;</span>
+      <span class="duration">0.00138s</span>
+      <div class="failure" id="failure_2">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;22&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:64:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:64:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">62</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_6" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_6" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_6');</script>
+    <script type="text/javascript">makeYellow('example_group_6');</script>
+    <script type="text/javascript">moveProgressBar('12.8');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition. (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_7" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_7" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_8" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_8" class="passed">BatchMode</dt>
+    <script type="text/javascript">makeRed('div_group_8');</script>
+    <script type="text/javascript">makeRed('example_group_8');</script>
+    <script type="text/javascript">moveProgressBar('13.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00040s</span>
+      <div class="failure" id="failure_3">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:83:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:83:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">81</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_9" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_9" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_10" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_10" class="passed">CheckHostIP</dt>
+    <script type="text/javascript">makeRed('div_group_10');</script>
+    <script type="text/javascript">makeRed('example_group_10');</script>
+    <script type="text/javascript">moveProgressBar('14.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00036s</span>
+      <div class="failure" id="failure_4">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:92:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:92:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">90</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_11" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_11" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_12" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_12" class="passed">StrictHostKeyChecking</dt>
+    <script type="text/javascript">makeRed('div_group_12');</script>
+    <script type="text/javascript">makeRed('example_group_12');</script>
+    <script type="text/javascript">moveProgressBar('15.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /ask|yes/</span>
+      <span class="duration">0.00033s</span>
+      <div class="failure" id="failure_5">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected nil to match /ask|yes/
+  # ssh-baseline-master/controls/ssh_spec.rb:101:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:101:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">99</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_13" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_13" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_14" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_14" class="passed">Ciphers</dt>
+    <script type="text/javascript">makeRed('div_group_14');</script>
+    <script type="text/javascript">makeRed('example_group_14');</script>
+    <script type="text/javascript">moveProgressBar('16.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;</span>
+      <span class="duration">0.00047s</span>
+      <div class="failure" id="failure_6">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:110:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:110:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">108</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_15" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_15" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_16" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_16" class="passed">KexAlgorithms</dt>
+    <script type="text/javascript">makeRed('div_group_16');</script>
+    <script type="text/javascript">makeRed('example_group_16');</script>
+    <script type="text/javascript">moveProgressBar('17.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;</span>
+      <span class="duration">0.00047s</span>
+      <div class="failure" id="failure_7">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:119:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:119:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">117</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_17" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_17" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_18" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_18" class="passed">MACs</dt>
+    <script type="text/javascript">makeRed('div_group_18');</script>
+    <script type="text/javascript">makeRed('example_group_18');</script>
+    <script type="text/javascript">moveProgressBar('18.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;</span>
+      <span class="duration">0.00052s</span>
+      <div class="failure" id="failure_8">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:128:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:128:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">126</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_19" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_19" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_20" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_20" class="passed">ForwardAgent</dt>
+    <script type="text/javascript">makeRed('div_group_20');</script>
+    <script type="text/javascript">makeRed('example_group_20');</script>
+    <script type="text/javascript">moveProgressBar('19.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00042s</span>
+      <div class="failure" id="failure_9">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:137:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:137:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">135</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_21" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_21" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_22" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_22" class="passed">ForwardX11</dt>
+    <script type="text/javascript">makeRed('div_group_22');</script>
+    <script type="text/javascript">makeRed('example_group_22');</script>
+    <script type="text/javascript">moveProgressBar('20.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00037s</span>
+      <div class="failure" id="failure_10">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:146:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:146:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">144</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_23" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_23" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_24" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_24" class="passed">HostbasedAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_24');</script>
+    <script type="text/javascript">makeRed('example_group_24');</script>
+    <script type="text/javascript">moveProgressBar('21.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00036s</span>
+      <div class="failure" id="failure_11">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:155:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:155:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">153</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_25" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_25" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_25');</script>
+    <script type="text/javascript">makeYellow('example_group_25');</script>
+    <script type="text/javascript">moveProgressBar('22.0');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition. (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_26" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_26" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_26');</script>
+    <script type="text/javascript">makeYellow('example_group_26');</script>
+    <script type="text/javascript">moveProgressBar('22.9');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition. (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_27" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_27" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_28" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_28" class="passed">PasswordAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_28');</script>
+    <script type="text/javascript">makeRed('example_group_28');</script>
+    <script type="text/javascript">moveProgressBar('23.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00035s</span>
+      <div class="failure" id="failure_12">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:184:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:184:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">182</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_29" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_29" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_30" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_30" class="passed">GSSAPIAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_30');</script>
+    <script type="text/javascript">makeRed('example_group_30');</script>
+    <script type="text/javascript">moveProgressBar('24.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00034s</span>
+      <div class="failure" id="failure_13">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: &quot;yes&quot;
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:193:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:193:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">191</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_31" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_31" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_32" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_32" class="passed">GSSAPIDelegateCredentials</dt>
+    <script type="text/javascript">makeRed('div_group_32');</script>
+    <script type="text/javascript">makeRed('example_group_32');</script>
+    <script type="text/javascript">moveProgressBar('25.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00038s</span>
+      <div class="failure" id="failure_14">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:202:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:202:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">200</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_33" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_33" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_34" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_34" class="passed">Tunnel</dt>
+    <script type="text/javascript">makeRed('div_group_34');</script>
+    <script type="text/javascript">makeRed('example_group_34');</script>
+    <script type="text/javascript">moveProgressBar('26.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00036s</span>
+      <div class="failure" id="failure_15">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:211:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:211:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">209</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_35" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_35" class="passed">SSH Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_36" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_36" class="passed">PermitLocalCommand</dt>
+    <script type="text/javascript">makeRed('div_group_36');</script>
+    <script type="text/javascript">makeRed('example_group_36');</script>
+    <script type="text/javascript">moveProgressBar('27.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00036s</span>
+      <div class="failure" id="failure_16">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/ssh_spec.rb:220:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:220:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">218</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_37" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_37" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_37');</script>
+    <script type="text/javascript">makeYellow('example_group_37');</script>
+    <script type="text/javascript">moveProgressBar('28.4');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition. (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_38" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_38" class="passed">Bash command ssh -G localhost</dt>
+  </dl>
+</div>
+<div id="div_group_39" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_39" class="passed">stdout</dt>
+    <script type="text/javascript">makeRed('div_group_39');</script>
+    <script type="text/javascript">makeRed('example_group_39');</script>
+    <script type="text/javascript">moveProgressBar('29.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match &quot;ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;</span>
+      <span class="duration">0.00104s</span>
+      <div class="failure" id="failure_17">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected &quot;user root\nhostname localhost\nport 22\naddkeystoagent false\naddressfamily any\nbatchmode no\ncanon...echar ~\nipqos lowdelay throughput\nrekeylimit 0 0\nstreamlocalbindmask 0177\nsyslogfacility USER\n&quot; to match &quot;ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;
+    Diff:
+    @@ -1,2 +1,80 @@
+    -ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+    +user root
+    +hostname localhost
+    +port 22
+    +addkeystoagent false
+    +addressfamily any
+    +batchmode no
+    +canonicalizefallbacklocal yes
+    +canonicalizehostname false
+    +challengeresponseauthentication yes
+    +checkhostip yes
+    +compression no
+    +controlmaster false
+    +enablesshkeysign no
+    +clearallforwardings no
+    +exitonforwardfailure no
+    +fingerprinthash SHA256
+    +forwardx11 no
+    +forwardx11trusted yes
+    +gatewayports no
+    +gssapiauthentication yes
+    +gssapikeyexchange no
+    +gssapidelegatecredentials no
+    +gssapitrustdns no
+    +gssapirenewalforcesrekey no
+    +gssapikexalgorithms gss-gex-sha1-,gss-group14-sha1-
+    +hashknownhosts yes
+    +hostbasedauthentication no
+    +identitiesonly no
+    +kbdinteractiveauthentication yes
+    +nohostauthenticationforlocalhost no
+    +passwordauthentication yes
+    +permitlocalcommand no
+    +proxyusefdpass no
+    +pubkeyauthentication yes
+    +requesttty auto
+    +streamlocalbindunlink no
+    +stricthostkeychecking ask
+    +tcpkeepalive yes
+    +tunnel false
+    +verifyhostkeydns false
+    +visualhostkey no
+    +updatehostkeys false
+    +canonicalizemaxdots 1
+    +connectionattempts 1
+    +forwardx11timeout 1200
+    +numberofpasswordprompts 3
+    +serveralivecountmax 3
+    +serveraliveinterval 0
+    +ciphers chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
+    +hostkeyalgorithms ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +hostbasedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+    +casignaturealgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256
+    +loglevel INFO
+    +macs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+    +securitykeyprovider internal
+    +pubkeyacceptedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +xauthlocation /usr/bin/xauth
+    +identityfile ~/.ssh/id_rsa
+    +identityfile ~/.ssh/id_dsa
+    +identityfile ~/.ssh/id_ecdsa
+    +identityfile ~/.ssh/id_ecdsa_sk
+    +identityfile ~/.ssh/id_ed25519
+    +identityfile ~/.ssh/id_ed25519_sk
+    +identityfile ~/.ssh/id_xmss
+    +canonicaldomains
+    +globalknownhostsfile /etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2
+    +userknownhostsfile ~/.ssh/known_hosts ~/.ssh/known_hosts2
+    +sendenv LANG
+    +sendenv LC_*
+    +forwardagent no
+    +connecttimeout none
+    +tunneldevice any:any
+    +controlpersist no
+    +escapechar ~
+    +ipqos lowdelay throughput
+    +rekeylimit 0 0
+    +streamlocalbindmask 0177
+    +syslogfacility USER
+  # ssh-baseline-master/controls/ssh_spec.rb:243:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:243:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">241</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_40" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_40" class="passed">stdout</dt>
+    <script type="text/javascript">makeRed('div_group_40');</script>
+    <script type="text/javascript">makeRed('example_group_40');</script>
+    <script type="text/javascript">moveProgressBar('30.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match &quot;kexalgorithms sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;</span>
+      <span class="duration">0.00086s</span>
+      <div class="failure" id="failure_18">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected &quot;user root\nhostname localhost\nport 22\naddkeystoagent false\naddressfamily any\nbatchmode no\ncanon...echar ~\nipqos lowdelay throughput\nrekeylimit 0 0\nstreamlocalbindmask 0177\nsyslogfacility USER\n&quot; to match &quot;kexalgorithms sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;
+    Diff:
+    @@ -1,2 +1,80 @@
+    -kexalgorithms sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+    +user root
+    +hostname localhost
+    +port 22
+    +addkeystoagent false
+    +addressfamily any
+    +batchmode no
+    +canonicalizefallbacklocal yes
+    +canonicalizehostname false
+    +challengeresponseauthentication yes
+    +checkhostip yes
+    +compression no
+    +controlmaster false
+    +enablesshkeysign no
+    +clearallforwardings no
+    +exitonforwardfailure no
+    +fingerprinthash SHA256
+    +forwardx11 no
+    +forwardx11trusted yes
+    +gatewayports no
+    +gssapiauthentication yes
+    +gssapikeyexchange no
+    +gssapidelegatecredentials no
+    +gssapitrustdns no
+    +gssapirenewalforcesrekey no
+    +gssapikexalgorithms gss-gex-sha1-,gss-group14-sha1-
+    +hashknownhosts yes
+    +hostbasedauthentication no
+    +identitiesonly no
+    +kbdinteractiveauthentication yes
+    +nohostauthenticationforlocalhost no
+    +passwordauthentication yes
+    +permitlocalcommand no
+    +proxyusefdpass no
+    +pubkeyauthentication yes
+    +requesttty auto
+    +streamlocalbindunlink no
+    +stricthostkeychecking ask
+    +tcpkeepalive yes
+    +tunnel false
+    +verifyhostkeydns false
+    +visualhostkey no
+    +updatehostkeys false
+    +canonicalizemaxdots 1
+    +connectionattempts 1
+    +forwardx11timeout 1200
+    +numberofpasswordprompts 3
+    +serveralivecountmax 3
+    +serveraliveinterval 0
+    +ciphers chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
+    +hostkeyalgorithms ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +hostbasedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+    +casignaturealgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256
+    +loglevel INFO
+    +macs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+    +securitykeyprovider internal
+    +pubkeyacceptedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +xauthlocation /usr/bin/xauth
+    +identityfile ~/.ssh/id_rsa
+    +identityfile ~/.ssh/id_dsa
+    +identityfile ~/.ssh/id_ecdsa
+    +identityfile ~/.ssh/id_ecdsa_sk
+    +identityfile ~/.ssh/id_ed25519
+    +identityfile ~/.ssh/id_ed25519_sk
+    +identityfile ~/.ssh/id_xmss
+    +canonicaldomains
+    +globalknownhostsfile /etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2
+    +userknownhostsfile ~/.ssh/known_hosts ~/.ssh/known_hosts2
+    +sendenv LANG
+    +sendenv LC_*
+    +forwardagent no
+    +connecttimeout none
+    +tunneldevice any:any
+    +controlpersist no
+    +escapechar ~
+    +ipqos lowdelay throughput
+    +rekeylimit 0 0
+    +streamlocalbindmask 0177
+    +syslogfacility USER
+  # ssh-baseline-master/controls/ssh_spec.rb:244:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:244:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">242</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_41" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_41" class="passed">stdout</dt>
+    <script type="text/javascript">makeRed('div_group_41');</script>
+    <script type="text/javascript">makeRed('example_group_41');</script>
+    <script type="text/javascript">moveProgressBar('31.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match &quot;macs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;</span>
+      <span class="duration">0.00082s</span>
+      <div class="failure" id="failure_19">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected &quot;user root\nhostname localhost\nport 22\naddkeystoagent false\naddressfamily any\nbatchmode no\ncanon...echar ~\nipqos lowdelay throughput\nrekeylimit 0 0\nstreamlocalbindmask 0177\nsyslogfacility USER\n&quot; to match &quot;macs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;
+    Diff:
+    @@ -1,2 +1,80 @@
+    -macs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
+    +user root
+    +hostname localhost
+    +port 22
+    +addkeystoagent false
+    +addressfamily any
+    +batchmode no
+    +canonicalizefallbacklocal yes
+    +canonicalizehostname false
+    +challengeresponseauthentication yes
+    +checkhostip yes
+    +compression no
+    +controlmaster false
+    +enablesshkeysign no
+    +clearallforwardings no
+    +exitonforwardfailure no
+    +fingerprinthash SHA256
+    +forwardx11 no
+    +forwardx11trusted yes
+    +gatewayports no
+    +gssapiauthentication yes
+    +gssapikeyexchange no
+    +gssapidelegatecredentials no
+    +gssapitrustdns no
+    +gssapirenewalforcesrekey no
+    +gssapikexalgorithms gss-gex-sha1-,gss-group14-sha1-
+    +hashknownhosts yes
+    +hostbasedauthentication no
+    +identitiesonly no
+    +kbdinteractiveauthentication yes
+    +nohostauthenticationforlocalhost no
+    +passwordauthentication yes
+    +permitlocalcommand no
+    +proxyusefdpass no
+    +pubkeyauthentication yes
+    +requesttty auto
+    +streamlocalbindunlink no
+    +stricthostkeychecking ask
+    +tcpkeepalive yes
+    +tunnel false
+    +verifyhostkeydns false
+    +visualhostkey no
+    +updatehostkeys false
+    +canonicalizemaxdots 1
+    +connectionattempts 1
+    +forwardx11timeout 1200
+    +numberofpasswordprompts 3
+    +serveralivecountmax 3
+    +serveraliveinterval 0
+    +ciphers chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
+    +hostkeyalgorithms ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +hostbasedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,diffie-hellman-group14-sha256
+    +casignaturealgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256
+    +loglevel INFO
+    +macs umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1
+    +securitykeyprovider internal
+    +pubkeyacceptedkeytypes ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521-cert-v01@openssh.com,sk-ecdsa-sha2-nistp256-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,sk-ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,ssh-rsa-cert-v01@openssh.com,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,ssh-ed25519,sk-ssh-ed25519@openssh.com,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+    +xauthlocation /usr/bin/xauth
+    +identityfile ~/.ssh/id_rsa
+    +identityfile ~/.ssh/id_dsa
+    +identityfile ~/.ssh/id_ecdsa
+    +identityfile ~/.ssh/id_ecdsa_sk
+    +identityfile ~/.ssh/id_ed25519
+    +identityfile ~/.ssh/id_ed25519_sk
+    +identityfile ~/.ssh/id_xmss
+    +canonicaldomains
+    +globalknownhostsfile /etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2
+    +userknownhostsfile ~/.ssh/known_hosts ~/.ssh/known_hosts2
+    +sendenv LANG
+    +sendenv LC_*
+    +forwardagent no
+    +connecttimeout none
+    +tunneldevice any:any
+    +controlpersist no
+    +escapechar ~
+    +ipqos lowdelay throughput
+    +rekeylimit 0 0
+    +streamlocalbindmask 0177
+    +syslogfacility USER
+  # ssh-baseline-master/controls/ssh_spec.rb:245:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/ssh_spec.rb:245:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">243</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/ssh_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_42" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_42" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_43" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_43" class="passed">Ciphers</dt>
+    <script type="text/javascript">makeRed('div_group_43');</script>
+    <script type="text/javascript">makeRed('example_group_43');</script>
+    <script type="text/javascript">moveProgressBar('32.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;</span>
+      <span class="duration">0.00051s</span>
+      <div class="failure" id="failure_20">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:53:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:53:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">51</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_44" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_44" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_45" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_45" class="passed">KexAlgorithms</dt>
+    <script type="text/javascript">makeRed('div_group_45');</script>
+    <script type="text/javascript">makeRed('example_group_45');</script>
+    <script type="text/javascript">moveProgressBar('33.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;</span>
+      <span class="duration">0.00080s</span>
+      <div class="failure" id="failure_21">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;sntrup4591761x25519-sha512@tinyssh.org,curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:62:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:62:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">60</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_46" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_46" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_47" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_47" class="passed">MACs</dt>
+    <script type="text/javascript">makeRed('div_group_47');</script>
+    <script type="text/javascript">makeRed('example_group_47');</script>
+    <script type="text/javascript">moveProgressBar('33.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;</span>
+      <span class="duration">0.00062s</span>
+      <div class="failure" id="failure_22">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:71:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:71:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">69</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_48" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_48" class="passed">File /etc/ssh</dt>
+    <script type="text/javascript">moveProgressBar('34.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to exist</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('35.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be directory</span><span class='duration'>0.00998s</span></dd>
+    <script type="text/javascript">moveProgressBar('36.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be owned by &quot;root&quot;</span><span class='duration'>0.01892s</span></dd>
+    <script type="text/javascript">moveProgressBar('37.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be grouped into &quot;root&quot;</span><span class='duration'>0.00365s</span></dd>
+    <script type="text/javascript">moveProgressBar('38.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be executable</span><span class='duration'>0.00024s</span></dd>
+    <script type="text/javascript">moveProgressBar('39.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by owner</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('40.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by group</span><span class='duration'>0.00020s</span></dd>
+    <script type="text/javascript">moveProgressBar('41.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by other</span><span class='duration'>0.00014s</span></dd>
+    <script type="text/javascript">moveProgressBar('42.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be writable by owner</span><span class='duration'>0.00014s</span></dd>
+    <script type="text/javascript">moveProgressBar('43.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by group</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('44.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by other</span><span class='duration'>0.00015s</span></dd>
+  </dl>
+</div>
+<div id="div_group_49" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_49" class="passed">File /etc/ssh/sshd_config</dt>
+    <script type="text/javascript">moveProgressBar('44.9');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to exist</span><span class='duration'>0.00012s</span></dd>
+    <script type="text/javascript">moveProgressBar('45.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be file</span><span class='duration'>0.00331s</span></dd>
+    <script type="text/javascript">moveProgressBar('46.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be owned by &quot;root&quot;</span><span class='duration'>0.01843s</span></dd>
+    <script type="text/javascript">moveProgressBar('47.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be grouped into &quot;root&quot;</span><span class='duration'>0.00323s</span></dd>
+    <script type="text/javascript">moveProgressBar('48.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be executable</span><span class='duration'>0.00021s</span></dd>
+    <script type="text/javascript">moveProgressBar('49.5');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be readable by owner</span><span class='duration'>0.00014s</span></dd>
+    <script type="text/javascript">makeRed('div_group_49');</script>
+    <script type="text/javascript">makeRed('example_group_49');</script>
+    <script type="text/javascript">moveProgressBar('50.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to be readable by group</span>
+      <span class="duration">0.00021s</span>
+      <div class="failure" id="failure_23">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected File /etc/ssh/sshd_config not to be readable by group
+  # ssh-baseline-master/controls/sshd_spec.rb:106:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:106:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">104</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+    <script type="text/javascript">moveProgressBar('51.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to be readable by other</span>
+      <span class="duration">0.00023s</span>
+      <div class="failure" id="failure_24">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected File /etc/ssh/sshd_config not to be readable by other
+  # ssh-baseline-master/controls/sshd_spec.rb:107:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:107:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">105</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+    <script type="text/javascript">moveProgressBar('52.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to be writable by owner</span><span class='duration'>0.00016s</span></dd>
+    <script type="text/javascript">moveProgressBar('53.2');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by group</span><span class='duration'>0.00012s</span></dd>
+    <script type="text/javascript">moveProgressBar('54.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to be writable by other</span><span class='duration'>0.00014s</span></dd>
+  </dl>
+</div>
+<div id="div_group_50" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_50" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_51" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_51" class="passed">PermitRootLogin</dt>
+    <script type="text/javascript">makeRed('div_group_51');</script>
+    <script type="text/javascript">makeRed('example_group_51');</script>
+    <script type="text/javascript">moveProgressBar('55.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /no|without-password|prohibit-password/</span>
+      <span class="duration">0.00056s</span>
+      <div class="failure" id="failure_25">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected nil to match /no|without-password|prohibit-password/
+  # ssh-baseline-master/controls/sshd_spec.rb:119:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:119:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">117</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_52" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_52" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_53" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_53" class="passed">Port</dt>
+    <script type="text/javascript">makeRed('div_group_53');</script>
+    <script type="text/javascript">makeRed('example_group_53');</script>
+    <script type="text/javascript">moveProgressBar('55.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;22&quot;</span>
+      <span class="duration">0.00056s</span>
+      <div class="failure" id="failure_26">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;22&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:128:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:128:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">126</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_54" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_54" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_55" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_55" class="passed">AddressFamily</dt>
+    <script type="text/javascript">makeRed('div_group_55');</script>
+    <script type="text/javascript">makeRed('example_group_55');</script>
+    <script type="text/javascript">moveProgressBar('56.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to match /inet|inet6|any/</span>
+      <span class="duration">0.00051s</span>
+      <div class="failure" id="failure_27">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+    expected nil to match /inet|inet6|any/
+  # ssh-baseline-master/controls/sshd_spec.rb:137:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:137:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">135</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_56" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_56" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_57" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_57" class="passed">ListenAddress</dt>
+    <script type="text/javascript">makeRed('div_group_57');</script>
+    <script type="text/javascript">makeRed('example_group_57');</script>
+    <script type="text/javascript">moveProgressBar('57.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected not to eq nil</span>
+      <span class="duration">0.00066s</span>
+      <div class="failure" id="failure_28">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: value != nil
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:146:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:146:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">144</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_58" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_58" class="passed">ListenAddress</dt>
+    <script type="text/javascript">moveProgressBar('58.7');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to match /^\s*$/</span><span class='duration'>0.00010s</span></dd>
+  </dl>
+</div>
+<div id="div_group_59" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_59" class="passed">ListenAddress</dt>
+    <script type="text/javascript">moveProgressBar('59.6');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected not to eq []</span><span class='duration'>0.00008s</span></dd>
+  </dl>
+</div>
+<div id="div_group_60" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_60" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_60');</script>
+    <script type="text/javascript">makeYellow('example_group_60');</script>
+    <script type="text/javascript">moveProgressBar('60.5');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition. (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_61" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_61" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_62" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_62" class="passed">StrictModes</dt>
+    <script type="text/javascript">makeRed('div_group_62');</script>
+    <script type="text/javascript">makeRed('example_group_62');</script>
+    <script type="text/javascript">moveProgressBar('61.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00048s</span>
+      <div class="failure" id="failure_29">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:167:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:167:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">165</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_63" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_63" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_64" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_64" class="passed">SyslogFacility</dt>
+    <script type="text/javascript">makeRed('div_group_64');</script>
+    <script type="text/javascript">makeRed('example_group_64');</script>
+    <script type="text/javascript">moveProgressBar('62.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;AUTH&quot;</span>
+      <span class="duration">0.00054s</span>
+      <div class="failure" id="failure_30">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;AUTH&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:176:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:176:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">174</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_65" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_65" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_66" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_66" class="passed">LogLevel</dt>
+    <script type="text/javascript">makeRed('div_group_66');</script>
+    <script type="text/javascript">makeRed('example_group_66');</script>
+    <script type="text/javascript">moveProgressBar('63.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;VERBOSE&quot;</span>
+      <span class="duration">0.00044s</span>
+      <div class="failure" id="failure_31">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;VERBOSE&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:185:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:185:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">183</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_67" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_67" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_68" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_68" class="passed">HostKey</dt>
+    <script type="text/javascript">makeRed('div_group_68');</script>
+    <script type="text/javascript">makeRed('example_group_68');</script>
+    <script type="text/javascript">moveProgressBar('64.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == [&quot;/etc/ssh/ssh_host_rsa_key&quot;, &quot;/etc/ssh/ssh_host_ecdsa_key&quot;, &quot;/etc/ssh/ssh_host_ed25519_key&quot;]</span>
+      <span class="duration">0.00055s</span>
+      <div class="failure" id="failure_32">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: [&quot;/etc/ssh/ssh_host_rsa_key&quot;, &quot;/etc/ssh/ssh_host_ecdsa_key&quot;, &quot;/etc/ssh/ssh_host_ed25519_key&quot;]
+         got: 
+
+    (compared using `cmp` matcher)
+  # ssh-baseline-master/controls/sshd_spec.rb:198:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:198:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">196</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_69" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_69" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_70" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_70" class="passed">UseLogin</dt>
+    <script type="text/javascript">moveProgressBar('65.1');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq nil</span><span class='duration'>0.00052s</span></dd>
+  </dl>
+</div>
+<div id="div_group_71" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_71" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_72" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_72" class="passed">UsePrivilegeSeparation</dt>
+    <script type="text/javascript">moveProgressBar('66.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq nil</span><span class='duration'>0.00039s</span></dd>
+  </dl>
+</div>
+<div id="div_group_73" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_73" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_74" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_74" class="passed">PermitUserEnvironment</dt>
+    <script type="text/javascript">makeRed('div_group_74');</script>
+    <script type="text/javascript">makeRed('example_group_74');</script>
+    <script type="text/javascript">moveProgressBar('66.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00042s</span>
+      <div class="failure" id="failure_33">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:225:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:225:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">223</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_75" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_75" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_76" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_76" class="passed">LoginGraceTime</dt>
+    <script type="text/javascript">makeRed('div_group_76');</script>
+    <script type="text/javascript">makeRed('example_group_76');</script>
+    <script type="text/javascript">moveProgressBar('67.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;30s&quot;</span>
+      <span class="duration">0.00043s</span>
+      <div class="failure" id="failure_34">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;30s&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:234:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:234:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">232</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_77" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_77" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_78" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_78" class="passed">MaxAuthTries</dt>
+    <script type="text/javascript">makeRed('div_group_78');</script>
+    <script type="text/javascript">makeRed('example_group_78');</script>
+    <script type="text/javascript">moveProgressBar('68.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to cmp == 2</span>
+      <span class="duration">0.00047s</span>
+      <div class="failure" id="failure_35">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: 2
+         got: 
+
+    (compared using `cmp` matcher)
+  # ssh-baseline-master/controls/sshd_spec.rb:245:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:245:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">243</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_79" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_79" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_80" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_80" class="passed">MaxSessions</dt>
+    <script type="text/javascript">makeRed('div_group_80');</script>
+    <script type="text/javascript">makeRed('example_group_80');</script>
+    <script type="text/javascript">moveProgressBar('69.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;10&quot;</span>
+      <span class="duration">0.00047s</span>
+      <div class="failure" id="failure_36">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;10&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:254:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:254:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">252</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_81" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_81" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_82" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_82" class="passed">MaxStartups</dt>
+    <script type="text/javascript">makeRed('div_group_82');</script>
+    <script type="text/javascript">makeRed('example_group_82');</script>
+    <script type="text/javascript">moveProgressBar('70.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;10:30:60&quot;</span>
+      <span class="duration">0.00045s</span>
+      <div class="failure" id="failure_37">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;10:30:60&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:263:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:263:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">261</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_83" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_83" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_84" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_84" class="passed">PubkeyAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_84');</script>
+    <script type="text/javascript">makeRed('example_group_84');</script>
+    <script type="text/javascript">moveProgressBar('71.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00042s</span>
+      <div class="failure" id="failure_38">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:272:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:272:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">270</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_85" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_85" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_86" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_86" class="passed">IgnoreRhosts</dt>
+    <script type="text/javascript">makeRed('div_group_86');</script>
+    <script type="text/javascript">makeRed('example_group_86');</script>
+    <script type="text/javascript">moveProgressBar('72.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00042s</span>
+      <div class="failure" id="failure_39">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:281:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:281:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">279</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_87" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_87" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_88" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_88" class="passed">IgnoreUserKnownHosts</dt>
+    <script type="text/javascript">makeRed('div_group_88');</script>
+    <script type="text/javascript">makeRed('example_group_88');</script>
+    <script type="text/javascript">moveProgressBar('73.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00040s</span>
+      <div class="failure" id="failure_40">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:290:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:290:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">288</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_89" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_89" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_90" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_90" class="passed">HostbasedAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_90');</script>
+    <script type="text/javascript">makeRed('example_group_90');</script>
+    <script type="text/javascript">moveProgressBar('74.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00052s</span>
+      <div class="failure" id="failure_41">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:299:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:299:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">297</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_91" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_91" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_92" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_92" class="passed">PasswordAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_92');</script>
+    <script type="text/javascript">makeRed('example_group_92');</script>
+    <script type="text/javascript">moveProgressBar('75.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00045s</span>
+      <div class="failure" id="failure_42">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: &quot;yes&quot;
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:308:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:308:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">306</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_93" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_93" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_94" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_94" class="passed">PermitEmptyPasswords</dt>
+    <script type="text/javascript">makeRed('div_group_94');</script>
+    <script type="text/javascript">makeRed('example_group_94');</script>
+    <script type="text/javascript">moveProgressBar('76.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00039s</span>
+      <div class="failure" id="failure_43">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:317:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:317:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">315</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_95" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_95" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_96" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_96" class="passed">ChallengeResponseAuthentication</dt>
+    <script type="text/javascript">moveProgressBar('77.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;no&quot;</span><span class='duration'>0.00038s</span></dd>
+  </dl>
+</div>
+<div id="div_group_97" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_97" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_98" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_98" class="passed">KerberosAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_98');</script>
+    <script type="text/javascript">makeRed('example_group_98');</script>
+    <script type="text/javascript">moveProgressBar('77.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00040s</span>
+      <div class="failure" id="failure_44">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:335:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:335:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">333</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_99" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_99" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_100" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_100" class="passed">KerberosOrLocalPasswd</dt>
+    <script type="text/javascript">makeRed('div_group_100');</script>
+    <script type="text/javascript">makeRed('example_group_100');</script>
+    <script type="text/javascript">moveProgressBar('78.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00039s</span>
+      <div class="failure" id="failure_45">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:344:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:344:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">342</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_101" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_101" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_102" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_102" class="passed">KerberosTicketCleanup</dt>
+    <script type="text/javascript">makeRed('div_group_102');</script>
+    <script type="text/javascript">makeRed('example_group_102');</script>
+    <script type="text/javascript">moveProgressBar('79.8');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00044s</span>
+      <div class="failure" id="failure_46">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:353:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:353:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">351</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_103" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_103" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_104" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_104" class="passed">GSSAPIAuthentication</dt>
+    <script type="text/javascript">makeRed('div_group_104');</script>
+    <script type="text/javascript">makeRed('example_group_104');</script>
+    <script type="text/javascript">moveProgressBar('80.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00041s</span>
+      <div class="failure" id="failure_47">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:362:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:362:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">360</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_105" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_105" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_106" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_106" class="passed">GSSAPICleanupCredentials</dt>
+    <script type="text/javascript">makeRed('div_group_106');</script>
+    <script type="text/javascript">makeRed('example_group_106');</script>
+    <script type="text/javascript">moveProgressBar('81.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00048s</span>
+      <div class="failure" id="failure_48">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:371:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:371:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">369</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_107" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_107" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_108" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_108" class="passed">TCPKeepAlive</dt>
+    <script type="text/javascript">makeRed('div_group_108');</script>
+    <script type="text/javascript">makeRed('example_group_108');</script>
+    <script type="text/javascript">moveProgressBar('82.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00041s</span>
+      <div class="failure" id="failure_49">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:380:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:380:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">378</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_109" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_109" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_110" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_110" class="passed">ClientAliveInterval</dt>
+    <script type="text/javascript">makeRed('div_group_110');</script>
+    <script type="text/javascript">makeRed('example_group_110');</script>
+    <script type="text/javascript">moveProgressBar('83.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;300&quot;</span>
+      <span class="duration">0.00044s</span>
+      <div class="failure" id="failure_50">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;300&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:389:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:389:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">387</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_111" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_111" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_112" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_112" class="passed">ClientAliveCountMax</dt>
+    <script type="text/javascript">makeRed('div_group_112');</script>
+    <script type="text/javascript">makeRed('example_group_112');</script>
+    <script type="text/javascript">moveProgressBar('84.4');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;3&quot;</span>
+      <span class="duration">0.00049s</span>
+      <div class="failure" id="failure_51">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;3&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:398:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:398:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">396</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_113" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_113" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_114" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_114" class="passed">PermitTunnel</dt>
+    <script type="text/javascript">makeRed('div_group_114');</script>
+    <script type="text/javascript">makeRed('example_group_114');</script>
+    <script type="text/javascript">moveProgressBar('85.3');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00042s</span>
+      <div class="failure" id="failure_52">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:407:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:407:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">405</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_115" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_115" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_116" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_116" class="passed">AllowTcpForwarding</dt>
+    <script type="text/javascript">makeRed('div_group_116');</script>
+    <script type="text/javascript">makeRed('example_group_116');</script>
+    <script type="text/javascript">moveProgressBar('86.2');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00039s</span>
+      <div class="failure" id="failure_53">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:416:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:416:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">414</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_117" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_117" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_118" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_118" class="passed">AllowAgentForwarding</dt>
+    <script type="text/javascript">makeRed('div_group_118');</script>
+    <script type="text/javascript">makeRed('example_group_118');</script>
+    <script type="text/javascript">moveProgressBar('87.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00040s</span>
+      <div class="failure" id="failure_54">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:425:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:425:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">423</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_119" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_119" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_120" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_120" class="passed">GatewayPorts</dt>
+    <script type="text/javascript">makeRed('div_group_120');</script>
+    <script type="text/javascript">makeRed('example_group_120');</script>
+    <script type="text/javascript">moveProgressBar('88.0');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00039s</span>
+      <div class="failure" id="failure_55">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:434:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:434:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">432</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_121" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_121" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_122" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_122" class="passed">X11Forwarding</dt>
+    <script type="text/javascript">makeRed('div_group_122');</script>
+    <script type="text/javascript">makeRed('example_group_122');</script>
+    <script type="text/javascript">moveProgressBar('88.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00047s</span>
+      <div class="failure" id="failure_56">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: &quot;yes&quot;
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:443:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:443:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">441</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_123" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_123" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_124" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_124" class="passed">X11UseLocalhost</dt>
+    <script type="text/javascript">makeRed('div_group_124');</script>
+    <script type="text/javascript">makeRed('example_group_124');</script>
+    <script type="text/javascript">moveProgressBar('89.9');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;yes&quot;</span>
+      <span class="duration">0.00041s</span>
+      <div class="failure" id="failure_57">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;yes&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:452:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:452:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">450</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_125" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_125" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_126" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_126" class="passed">PrintMotd</dt>
+    <script type="text/javascript">moveProgressBar('90.8');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;no&quot;</span><span class='duration'>0.00043s</span></dd>
+  </dl>
+</div>
+<div id="div_group_127" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_127" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_128" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_128" class="passed">PrintLastLog</dt>
+    <script type="text/javascript">makeRed('div_group_128');</script>
+    <script type="text/javascript">makeRed('example_group_128');</script>
+    <script type="text/javascript">moveProgressBar('91.7');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00039s</span>
+      <div class="failure" id="failure_58">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:470:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:470:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">468</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_129" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_129" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_130" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_130" class="passed">Banner</dt>
+    <script type="text/javascript">makeRed('div_group_130');</script>
+    <script type="text/javascript">makeRed('example_group_130');</script>
+    <script type="text/javascript">moveProgressBar('92.6');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;none&quot;</span>
+      <span class="duration">0.00040s</span>
+      <div class="failure" id="failure_59">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;none&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:479:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:479:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">477</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_131" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_131" class="passed">SSHD Configuration</dt>
+  </dl>
+</div>
+<div id="div_group_132" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_132" class="passed">DebianBanner</dt>
+    <script type="text/javascript">makeRed('div_group_132');</script>
+    <script type="text/javascript">makeRed('example_group_132');</script>
+    <script type="text/javascript">moveProgressBar('93.5');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq &quot;no&quot;</span>
+      <span class="duration">0.00070s</span>
+      <div class="failure" id="failure_60">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: &quot;no&quot;
+         got: nil
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:490:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:490:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">488</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_133" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_133" class="passed">Bash command test $(awk &#39;$5 &lt; 2047 &amp;&amp; $5 ~ /^[0-9]+$/ { print $5 }&#39; /etc/ssh/moduli | uniq | wc -c) -eq 0</dt>
+  </dl>
+</div>
+<div id="div_group_134" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_134" class="passed">exit_status</dt>
+    <script type="text/javascript">moveProgressBar('94.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq 0</span><span class='duration'>0.01752s</span></dd>
+  </dl>
+</div>
+<div id="div_group_135" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_135" class="passed">stdout</dt>
+    <script type="text/javascript">moveProgressBar('95.4');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;&quot;</span><span class='duration'>0.00014s</span></dd>
+  </dl>
+</div>
+<div id="div_group_136" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_136" class="passed">stderr</dt>
+    <script type="text/javascript">moveProgressBar('96.3');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;&quot;</span><span class='duration'>0.00008s</span></dd>
+  </dl>
+</div>
+<div id="div_group_137" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_137" class="passed">No-op</dt>
+    <script type="text/javascript">makeYellow('div_group_137');</script>
+    <script type="text/javascript">makeYellow('example_group_137');</script>
+    <script type="text/javascript">moveProgressBar('97.2');</script>
+    <dd class="example not_implemented"><span class="not_implemented_spec_name">Skipped control due to only_if condition: sshd with options is running (PENDING: Not yet implemented)</span></dd>
+  </dl>
+</div>
+<div id="div_group_138" class="example_group passed">
+  <dl style="margin-left: 0px;">
+  <dt id="example_group_138" class="passed">Bash command test $(ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key | awk &#39;$1 &lt; 4096 { print $1 }&#39; | wc -l) -eq 0</dt>
+  </dl>
+</div>
+<div id="div_group_139" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_139" class="passed">exit_status</dt>
+    <script type="text/javascript">makeRed('div_group_139');</script>
+    <script type="text/javascript">makeRed('example_group_139');</script>
+    <script type="text/javascript">moveProgressBar('98.1');</script>
+    <dd class="example failed">
+      <span class="failed_spec_name">is expected to eq 0</span>
+      <span class="duration">0.01929s</span>
+      <div class="failure" id="failure_61">
+        <div class="message"><pre>  Failure/Error: DEFAULT_FAILURE_NOTIFIER = lambda { |failure, _opts| raise failure }
+
+    expected: 0
+         got: 1
+
+    (compared using ==)
+  # ssh-baseline-master/controls/sshd_spec.rb:535:in `block (3 levels) in load_with_context&#39;</pre></div>
+        <div class="backtrace"><pre>ssh-baseline-master/controls/sshd_spec.rb:535:in `block (3 levels) in load_with_context&#39;</pre></div>
+    <pre class="ruby"><code><span class="linenum">533</span><span class="comment"># Couldn't get snippet for ssh-baseline-master/controls/sshd_spec.rb</span></code></pre>
+      </div>
+    </dd>
+  </dl>
+</div>
+<div id="div_group_140" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_140" class="passed">stdout</dt>
+    <script type="text/javascript">moveProgressBar('99.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;&quot;</span><span class='duration'>0.00021s</span></dd>
+  </dl>
+</div>
+<div id="div_group_141" class="example_group passed">
+  <dl style="margin-left: 15px;">
+  <dt id="example_group_141" class="passed">stderr</dt>
+    <script type="text/javascript">moveProgressBar('100.0');</script>
+    <dd class="example passed"><span class="passed_spec_name">is expected to eq &quot;&quot;</span><span class='duration'>0.00008s</span></dd>
+  </dl>
+</div>
+<script type="text/javascript">document.getElementById('duration').innerHTML = "Finished in <strong>0.38935 seconds</strong>";</script>
+<script type="text/javascript">document.getElementById('totals').innerHTML = "109 examples, 61 failures, 6 pending";</script>
+</div>
+</div>
+</body>
+</html>
