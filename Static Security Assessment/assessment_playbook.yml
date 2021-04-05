@@ -32,6 +32,6 @@
     find: paths="/tmp" recurse=yes patterns="*.html"
     register: files_to_copy
   - fetch:
-      src: {{ item.path }}
+      src: "{{ item.path }}"
       dest: ../Results/
       with_items: "{{ files_to_copy.files }}"
