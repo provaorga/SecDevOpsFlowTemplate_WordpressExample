@@ -54,10 +54,10 @@ pipeline {
           remote.allowAnyHosts = true
           
           def kali = [:]
-          kali.name = "${MASTER_USER}"
+          kali.name = "${KALI_USER}"
           kali.host = "${KALI_IP}"
-          kali.user = "${MASTER_USER}"
-          kali.password = "${MASTER_PASS}"
+          kali.user = "${KALI_USER}"
+          kali.password = "${KALI_PASS}"
           kali.allowAnyHosts = true
           
           sh 'echo "DAST in ZAP Container"'
