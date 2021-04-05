@@ -1,8 +1,8 @@
 [KubWorker]
-lookup('env','WORDKER_IP')
+host="{{ lookup('env','WORKER_IP')}}"
 
 [KubMaster]
-lookup('env','MASTER_IP')
+host="{{ lookup('env','MASTER_IP')}}"
 
 [KubCluster:children]
 KubMaster
