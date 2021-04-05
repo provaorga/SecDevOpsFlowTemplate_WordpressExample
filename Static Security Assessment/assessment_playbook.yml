@@ -20,10 +20,10 @@
       name: libopenscap8
       state: present
   - name: Transfer scap datastream
-    copy: src=/home/giuseppe/Downloads/scap-security-guide-0.1.53/ssg-ubuntu1804-ds-1.2.xml dest=/tmp/ssg-ubuntu1804-ds-1.2.xml mode=0777
+    copy: src=/home/giuseppe/Downloads/scap-security-guide-0.1.53/ssg-ubuntu1804-ds-1.2.xml dest=/tmp/scap_policy.xml mode=0777
  
   - name: Execute static assessment
-    command: oscap xccdf eval --profile anssi_np_nt28_minimal --report /tmp/oscap_report.html /tmp/ssg-ubuntu1804-ds-1.2.xml
+    command: oscap xccdf eval --profile anssi_np_nt28_minimal --report /tmp/scap_report.html /tmp/scap_policy.xml
     register: result
     failed_when:
       - result.rc == 1
