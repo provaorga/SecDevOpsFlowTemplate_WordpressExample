@@ -44,7 +44,7 @@ pipeline {
     }
   stage('DAST'){
     steps{
-      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), string(credentialsid:'MASTER_IP', variable:'MASTER_IP')]){
+      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), string(credentialsId:'MASTER_IP', variable:'MASTER_IP')]){
         script{
           def remote = [:]
           remote.name = "${MASTER_USER}"
