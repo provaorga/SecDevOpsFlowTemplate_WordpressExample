@@ -14,14 +14,14 @@ pipeline {
     }
     stage('Resource Configuration'){
       steps{
-        withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: ''),string(credentialsId:'MASTER_IP', variable:'MASTER_IP'),string(credentialsId:'WORKER_IP', variable:'WORKER_IP')]){
+        withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: '')]){
          //ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Resource Configuration/kubernetes/set_up_cluster.yml'
         }
       }
     }
     stage('Static Assessment Provisioned Environment'){
       steps{
-        withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: ''),,string(credentialsId:'MASTER_IP', variable:'MASTER_IP'),string(credentialsId:'WORKER_IP', variable:'WORKER_IP')]){
+        withCredentials([usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_PASS', usernameVariable: 'WORKER_USER'), usernamePassword(credentialsId: 'worker', passwordVariable: 'WORKER_SUDO_PASS', usernameVariable: ''), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_SUDO_PASS', usernameVariable: '')]){
           ansiblePlaybook become: true, credentialsId: 'node', disableHostKeyChecking: true, installation: 'ansible', inventory: 'hosts', playbook: 'Static Security Assessment/assessment_playbook.yml'
         }
       }
@@ -44,20 +44,20 @@ pipeline {
     }
   stage('DAST'){
     steps{
-      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), string(credentialsId:'MASTER_IP', variable:'MASTER_IP')]){
+      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), usernamePassword(credentialsId: 'KALI_CREDENTIALS', passwordVariable: 'KALI_PASS', usernameVariable: 'KALI_USER') ,string(credentialsId:'MASTER_IP', variable:'MASTER_IP'),, string(credentialsId:'KALI_IP', variable:'KALI_IP')]){
         script{
           def remote = [:]
           remote.name = "${MASTER_USER}"
           remote.host = "${MASTER_IP}"
           remote.user = "${MASTER_USER}"
-          remote.password = "${MASTER_USER}"
+          remote.password = "${MASTER_PASS}"
           remote.allowAnyHosts = true
           
           def kali = [:]
-          kali.name = "kali"
-          kali.host = '192.168.6.118'
-          kali.user = "kali"
-          kali.password = "kali"
+          kali.name = "${MASTER_USER}"
+          kali.host = "${KALI_IP}"
+          kali.user = "${MASTER_USER}"
+          kali.password = "${MASTER_PASS}"
           kali.allowAnyHosts = true
           
           sh 'echo "DAST in ZAP Container"'
