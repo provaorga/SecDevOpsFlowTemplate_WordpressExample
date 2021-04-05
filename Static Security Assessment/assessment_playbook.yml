@@ -30,7 +30,7 @@
       
   - name: Get Reports
     fetch:
-      src: "{{ item.path }}"
+      src: /tmp/{{ item }}
       dest: ../Results/
     with_items:
       - inspec_report.html
