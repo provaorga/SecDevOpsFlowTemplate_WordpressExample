@@ -72,10 +72,12 @@ pipeline {
           sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/Results/${JOB_NAME}.html", override: true
           
           withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+            /*
             sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
             sh 'git add Results/*'
             sh 'git commit -m "Add report File"'
             sh 'git push origin HEAD:main'
+            */
             
           }
         }
