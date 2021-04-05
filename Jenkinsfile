@@ -60,7 +60,7 @@ pipeline {
           kali.password = "kali"
           kali.allowAnyHosts = true
           
-          sh 'echo "DAST in ZAP Container"'
+          sh 'echo "DAST in ZAP Container" && sleep 30'
           kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], kubeconfigId: 'provafile', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sh 'echo "DAST in Kali-Linux"'
           sshPut remote: kali, from: 'DAST/kali_zap.sh', into: '.'
