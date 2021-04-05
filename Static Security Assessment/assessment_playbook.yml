@@ -27,11 +27,12 @@
     register: result
     failed_when:
       - result.rc == 1
-  
-  - name: Get reports
-    find: paths="/tmp" recurse=yes patterns="*.html"
-    register: files_to_copy
-  - fetch:
+      
+  - name: Get Reports
+    fetch:
       src: "{{ item.path }}"
       dest: ../Results/
-      with_items: "{{ files_to_copy.files }}"
+    with_items:
+      - inspec_report.html
+      - provareport.html
+      - oscap_report.html
