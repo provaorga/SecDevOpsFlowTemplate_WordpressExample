@@ -1,8 +1,8 @@
 [KubWorker]
-host="{{ lookup('env','WORKER_IP')}}"
+192.168.6.97
 
 [KubMaster]
-host="{{ lookup('env','MASTER_IP')}}"
+192.168.6.76
 
 [KubCluster:children]
 KubMaster
