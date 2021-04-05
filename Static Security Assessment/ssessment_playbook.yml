@@ -14,12 +14,8 @@
     register: result
     failed_when:
       - result.rc == 1
-  
-  - fetch:
-      src: /tmp/inspec_report.html
-      dest: ../Results/
 
-  - name: Install openscap
+- name: Install openscap
     apt:
       name: libopenscap8
       state: present
