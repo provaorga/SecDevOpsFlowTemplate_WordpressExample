@@ -1,8 +1,8 @@
 [KubWorker]
-{{ lookup('env','WORDKER_IP')}}
+lookup('env','WORDKER_IP')
 
 [KubMaster]
-{{ lookup('env','MASTER_IP')}}
+lookup('env','MASTER_IP')
 
 [KubCluster:children]
 KubMaster
