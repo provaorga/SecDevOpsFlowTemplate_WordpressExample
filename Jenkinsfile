@@ -44,11 +44,11 @@ pipeline {
     }
   stage('DAST'){
     steps{
-      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER')]){
+      withCredentials([usernamePassword(credentialsId: 'master', passwordVariable: 'MASTER_PASS', usernameVariable: 'MASTER_USER'), string(credentialsid:'MASTER_IP', variable:'MASTER_IP')]){
         script{
           def remote = [:]
           remote.name = "${MASTER_USER}"
-          remote.host = '192.168.6.76'
+          remote.host = "${MASTER_IP}"
           remote.user = "${MASTER_USER}"
           remote.password = "${MASTER_USER}"
           remote.allowAnyHosts = true
