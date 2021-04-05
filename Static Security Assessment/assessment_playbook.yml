@@ -29,7 +29,7 @@
       - result.rc == 1
   
   - fetch:
-      src: /tmp/{{ item }}
+      src: /tmp/"{{item}}"
       dest: ../Results/
       with_items:
         - inspec_report.html
