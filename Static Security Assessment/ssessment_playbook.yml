@@ -33,5 +33,9 @@
       - result.rc == 1
   
   - fetch:
-      src: /tmp/oscap_report.html
+      src: /tmp/{{ item }}
       dest: ../Results/
+      with_items:
+        - inspec_report.html
+        - oscap_report.html
+        - provareport.html
