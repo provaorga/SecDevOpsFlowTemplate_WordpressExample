@@ -24,7 +24,7 @@
     copy: src=/home/giuseppe/Downloads/scap-security-guide-0.1.55/ssg-ubuntu2004-ds-1.2.xml dest=/tmp/scap_policy.xml mode=0777
  
   - name: Execute static assessment
-    command: oscap xccdf eval --profile cpntent_profile_standard --report /tmp/ubuntu2004_scap_Report.html /tmp/scap_policy.xml
+    command: oscap xccdf eval --profile content_profile_standard --report /tmp/ubuntu2004_scap_Report.html /tmp/scap_policy.xml
     register: result
     failed_when:
       - result.rc == 1
