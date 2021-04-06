@@ -11,7 +11,7 @@
     with_items:
       - inspec exec https://github.com/dev-sec/linux-baseline --reporter html:/tmp/linux_chef_Report.html --chef-license=accept
       - inspec exec https://github.com/dev-sec/ssh-baseline --reporter html:/tmp/ssh_chef_Report.html --chef-license=accept
-      - inspec exec https://github.com/dev-sec/cis-kubernetes-benchmark--reporter html:/tmp/kubernetes_cis_chef_Report.html --chef-license=accept
+      - inspec exec https://github.com/dev-sec/cis-kubernetes-benchmark --reporter html:/tmp/kubernetes_cis_chef_Report.html --chef-license=accept
     register: result
     failed_when:
       - result.rc == 1
