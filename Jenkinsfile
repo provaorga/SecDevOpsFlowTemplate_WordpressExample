@@ -71,14 +71,15 @@ pipeline {
           kubernetesDeploy configs: 'DAST/zap.yaml', kubeConfig: [path: ''], deleteResource: 'true', kubeconfigId: 'provafile', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']        
           sshGet remote: remote, from: "/tmp/zap/${JOB_NAME}.html", into: "${WORKSPACE}/Results/${JOB_NAME}.html", override: true
           
+          sh 'echo WPScan in Kali-Linux'
+          sshPut remote: kali, from: 'DAST/kali_wpscan.sh', into: '.'
+          sshCommand remote: kali, command: "chmod +x kali_zap.sh && ./kali_zap.sh http://192.168.6.76:31381 /tmp/kali_wpscan_Report.html"
+          
           withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            
             sh 'git remote set-url origin "https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/provaorga/${JOB_NAME}.git"'
             sh 'git add Results/*'
             sh 'git commit -m "Add report File"'
             sh 'git push origin HEAD:main'
-            
-            
           }
         }
       }
