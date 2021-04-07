@@ -73,7 +73,7 @@ pipeline {
           
           sh 'echo WPScan in Kali-Linux'
           sshPut remote: kali, from: 'DAST/kali_wpscan.sh', into: '.'
-          sshCommand remote: kali, command: "chmod +x kali_zap.sh && ./kali_zap.sh http://192.168.6.76:31381 /tmp/kali_wpscan_Report.html"
+          sshCommand remote: kali, command: "chmod +x kali_wpscan.sh && ./kali_zap.sh http://192.168.6.76:31381 /tmp/kali_wpscan_Report.html"
           sshGet remote: kali, from: "/tmp/kali_wpscan_Report.html", into: "${WORKSPACE}/Results/${JOB_NAME}_kali_wpscan_report.html", override: true
           
           withCredentials([usernamePassword(credentialsId: 'GIT', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
